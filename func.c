@@ -14,3 +14,15 @@ void its_insere(Itens *e, int p[], int v[]){
         e->valores[i] = v[i];
     }
 }
+
+void its_imprime(Itens *e){
+    printf("Pesos: ");
+    for(int i=0; i<e->qtd_itens; i++){
+        printf("%d ", e->pesos[i]);
+    }
+    printf("\nValores: ");
+    for(int i=0; i<e->qtd_itens; i++){
+        printf("%d ", e->valores[i]);
+    }
+    printf("\n");
+}

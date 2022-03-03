@@ -15,9 +15,7 @@ int main(){
     }
 
     its_insere(e, p, v);
-
-    printf("Quantidade de itens: %d.\n", e->qtd_itens);
-    printf("O item 1 pesa %dkg e custa %d$.\n", e->pesos[0], e->valores[0]);
+    its_imprime(e);
 
     return 0;
 }
