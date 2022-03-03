@@ -9,3 +9,4 @@ typedef struct{
 } Itens;
 
 Itens* its_criar(int n);
+void its_insere(Itens *e, int p[], int v[]);

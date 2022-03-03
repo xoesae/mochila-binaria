@@ -7,3 +7,10 @@ Itens* its_criar(int n){
     e->valores = (int*)malloc(n * sizeof(int));
     return e;
 }
+
+void its_insere(Itens *e, int p[], int v[]){
+    for(int i=0; i<e->qtd_itens; i++){
+        e->pesos[i] = p[i];
+        e->valores[i] = v[i];
+    }
+}
