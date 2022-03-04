@@ -21,9 +21,8 @@ int main(){
 
     // imprime resultados
     printf("O peso máximo que a mochila pode carregar é de %d.\n", W);
-    printf("Vetor solução: ");
     sol_imprime(n, sol);
-    printf("Valor máximo carregado: %d\n", r);
+    its_verifica_solucao(e, sol);
 
     its_libera(e); // libera memoria
     

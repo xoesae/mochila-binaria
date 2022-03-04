@@ -28,6 +28,16 @@ void its_imprime(Itens *e){
     printf("\n");
 }
 
+void its_verifica_solucao(Itens *e, int *sol){
+    int w = 0, v = 0;
+    for(int i=0; i<e->qtd_itens; i++){
+        if(sol[i] == 1)
+            w += e->pesos[i];
+            v += e->valores[i];
+    }
+    printf("A solução usa %dkg e gera um valor de %d$.\n", w, v);
+}
+
 void its_libera(Itens *e){
     free(e->pesos);
     free(e->valores);
@@ -36,7 +46,7 @@ void its_libera(Itens *e){
 
 // funcoes uteis
 void sol_imprime(int n, int *s){
-    printf("[ ");
+    printf("Vetor solução: [ ");
     for(int i=0; i<n; i++){
         if(i == (n-1)){
             printf("%d ", s[i]);

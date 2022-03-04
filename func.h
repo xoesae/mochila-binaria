@@ -10,6 +10,7 @@ typedef struct{
 Itens* its_criar(int n);
 void its_insere(Itens *e, int p[], int v[]);
 void its_imprime(Itens *e);
+void its_verifica_solucao(Itens *e, int *sol);
 void its_libera(Itens *e);
 
 void sol_imprime(int n, int *s);
