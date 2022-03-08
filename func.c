@@ -31,9 +31,10 @@ void its_imprime(Itens *e){
 void its_verifica_solucao(Itens *e, int *sol){
     int w = 0, v = 0;
     for(int i=0; i<e->qtd_itens; i++){
-        if(sol[i] == 1)
+        if(sol[i] == 1){
             w += e->pesos[i];
             v += e->valores[i];
+        }  
     }
     printf("A solução usa %dkg e gera um valor de %d$.\n", w, v);
 }
@@ -58,34 +59,50 @@ void sol_imprime(int n, int *s){
 }
 
 // funcoes mochila 0-1
-int max(int a, int b) { return (a > b) ? a : b; }
+int maximo(int a, int b) { return (a > b) ? a : b; }
 
-int mochila_forca_bruta(int W, int *wt, int *val, int n, int *sol){
-    // Base Case
-    if (n == 0 || W == 0){
-        return 0; // nao tem solucao
-    }
-        
-    // If weight of the nth item is more than
-    // Knapsack capacity W, then this item cannot
-    // be included in the optimal solution
-    if (wt[n - 1] > W){
-        sol[n-1] = 1;
-        return mochila_forca_bruta(W, wt, val, n - 1, sol);
-    }
-        
-    // Return the maximum of two cases:
-    // (1) nth item included
-    // (2) not included
-    else{
-        int usa = val[n - 1] + mochila_forca_bruta(W - wt[n - 1], wt, val, n - 1, sol);
-        int nao_usa = mochila_forca_bruta(W, wt, val, n - 1, sol);
-        int maximo = max(usa, nao_usa);
-
-        if(maximo == usa){
-            sol[n-1] = 1;
+int mochila_forca_bruta(int W, int *pesos, int *valores, int n, int *solucao)
+{
+    int i, w;
+    int K[n + 1][W + 1];
+ 
+    // Build table K[][] in bottom up manner
+    for (i = 0; i <= n; i++) {
+        for (w = 0; w <= W; w++) {
+            if (i == 0 || w == 0){
+                K[i][w] = 0;
+            } 
+            else if (pesos[i - 1] <= w){
+                int usa = valores[i - 1] + K[i - 1][w - pesos[i - 1]];
+                int nao_usa = K[i - 1][w];
+                K[i][w] = maximo(usa, nao_usa);
+            }
+            else{
+                K[i][w] = K[i - 1][w];
+            }
         }
-
-        return maximo;
+    }
+ 
+    // armazena resultados da mochila
+    int res = K[n][W];  
+     
+    w = W;
+    for (i = n; i > 0 && res > 0; i--) {
+        // either the result comes from the top
+        // (K[i-1][w]) or from (valores[i-1] + K[i-1]
+        // [w-pesos[i-1]]) as in Knapsack table. If
+        // it comes from the latter one/ it means
+        // the item is included.
+        if (res == K[i - 1][w]){
+            continue;   
+        }    
+        else {
+            // tem item na posicao i-1
+            solucao[i -1] = 1;
+             
+            // remove o valor e peso na posicao i-1
+            res = res - valores[i - 1];
+            w = w - pesos[i - 1];
+        }
     }
 }

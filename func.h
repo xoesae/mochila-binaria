@@ -15,5 +15,5 @@ void its_libera(Itens *e);
 
 void sol_imprime(int n, int *s);
 
-int max(int a, int b);
-int mochila_forca_bruta(int W, int *wt, int *val, int n, int *sol);
+int maximo(int a, int b);
+int mochila_forca_bruta(int W, int *pesos, int *valores, int n, int *solucao);
