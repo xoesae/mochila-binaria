@@ -9,14 +9,14 @@ int main()
     int *sol = (int *)malloc(n * sizeof(int));          // vetor solucao
     int *pesos = (int *)malloc(n * sizeof(int)), *valores = (int *)malloc(n * sizeof(int));
 
-    preenche_vetor(p, n, pesos);
-    preenche_vetor(v, n, valores);
-
     if (sol == NULL || pesos == NULL || valores == NULL)
     { // verifica se a memoria esta sendo alocada corretamente
         printf("Memória não alocada!");
         exit(1);
     }
+
+    preenche_vetor(p, n, pesos);
+    preenche_vetor(v, n, valores);
 
     /*
     mochila_forca_bruta(W, pesos, valores, qtd_itens, sol); // chama algoritmo do forca bruta
@@ -27,17 +27,24 @@ int main()
 
     // imprime resultados
     imprime_dados(pesos, valores, n);
+
+    printf("Maior Beneficio: ");
+    mochila_beneficio(W, pesos, valores, n, sol);
+    sol_imprime(n, sol);
+    zera_lista(n, sol);
+
+    printf("Menor peso: ");
+    mochila_menor_peso(W, pesos, valores, n, sol);
+    sol_imprime(n, sol);
+    zera_lista(n, sol);
+
+    printf("Peso/Beneficio: ");
     mochila_peso_beneficio(W, pesos, valores, n, sol);
     sol_imprime(n, sol);
 
-    /*  float *pb = (float *)malloc(n * sizeof(float));
-
-     peso_beneficio(n, pesos, valores, pb);
-
-     for (int i = 0; i < n; i++)
-     {
-         printf("%f ", pb[i]);
-     } */
+    free(sol);
+    free(pesos);
+    free(valores);
 
     return 0;
 }

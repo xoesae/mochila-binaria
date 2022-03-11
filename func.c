@@ -40,7 +40,7 @@ int *verifica_solucao(int *pesos, int *valores, int n, int *sol)
 // funcoes uteis
 void sol_imprime(int n, int *s)
 {
-    printf("Vetor solução: [ ");
+    printf("[ ");
     for (int i = 0; i < n; i++)
     {
         if (i == (n - 1))
@@ -60,6 +60,14 @@ void copia_lista(int n, int *copia, int *original)
     for (int i = 0; i < n; i++)
     {
         copia[i] = original[i];
+    }
+}
+
+void zera_lista(int n, int *v)
+{
+    for (int i = 0; i < n; i++)
+    {
+        v[i] = 0;
     }
 }
 
@@ -207,20 +215,6 @@ float menor_f(int n, float *v)
     return m;
 }
 
-int iguais(int n, int *v1, int *v2)
-{
-    int b = 1;
-    for (int i = 0; i < n; i++)
-    {
-        if (v1[i] != v2[i])
-        {
-            b = 0;
-            break;
-        }
-    }
-    return b;
-}
-
 void peso_beneficio(int n, int *p, int *v, float *r)
 {
     for (int i = 0; i < n; i++)
@@ -232,84 +226,81 @@ void peso_beneficio(int n, int *p, int *v, float *r)
 
 void mochila_beneficio(int W, int *pesos, int *valores, int n, int *solucao)
 {
-    int maior_valor = maior(n, valores);
-    int *aux = (int *)malloc(n * sizeof(int)), j;
+    int *p = (int *)malloc(n * sizeof(int)), *v = (int *)malloc(n * sizeof(int));
+    copia_lista(n, p, pesos);
+    copia_lista(n, v, valores);
 
-    for (j = 0; j < n; j++)
+    int maior_valor = maior(n, v);
+
+    for (int j = 0; j < n; j++)
     {
         for (int i = 0; i < n; i++)
         {
-            if (solucao[i] == 0 && pesos[i] <= W && valores[i] == maior_valor)
+            if (solucao[i] == 0 && v[i] == maior_valor)
             {
-                W -= pesos[i];
-                valores[i] = -999;
-                maior_valor = maior(n, valores);
-                solucao[i] = 1;
-            }
-            if (solucao[i] == 0 && pesos[i] > W && valores[i] == maior_valor)
-            {
-                valores[i] = -999;
-                maior_valor = maior(n, valores);
+                if (p[i] <= W)
+                {
+                    W -= p[i];
+                    solucao[i] = 1;
+                }
+                v[i] = -99999;
+                maior_valor = maior(n, v);
             }
         }
-        copia_lista(n, aux, solucao);
     }
-    free(aux);
 }
 
 void mochila_menor_peso(int W, int *pesos, int *valores, int n, int *solucao)
 {
-    int menor_peso = menor(n, pesos);
-    int *aux = (int *)malloc(n * sizeof(int)), j;
+    int *p = (int *)malloc(n * sizeof(int)), *v = (int *)malloc(n * sizeof(int));
+    copia_lista(n, p, pesos);
+    copia_lista(n, v, valores);
 
-    for (j = 0; j < n; j++)
+    int menor_peso = menor(n, p);
+
+    for (int j = 0; j < n; j++)
     {
         for (int i = 0; i < n; i++)
         {
-            if (solucao[i] == 0 && pesos[i] <= W && pesos[i] == menor_peso)
+            if (solucao[i] == 0 && p[i] == menor_peso)
             {
-                W -= pesos[i];
-                pesos[i] = 10000000;
-                menor_peso = menor(n, pesos);
-                solucao[i] = 1;
-            }
-            if (solucao[i] == 0 && pesos[i] > W && pesos[i] == menor_peso)
-            {
-                pesos[i] = 10000000;
-                menor_peso = menor(n, pesos);
+                if (p[i] <= W)
+                {
+                    W -= p[i];
+                    solucao[i] = 1;
+                }
+                p[i] = 10000000;
+                menor_peso = menor(n, p);
             }
         }
-        copia_lista(n, aux, solucao);
     }
-    free(aux);
 }
 
 void mochila_peso_beneficio(int W, int *pesos, int *valores, int n, int *solucao)
 {
-    int *aux = (int *)malloc(n * sizeof(int)), j;
-    float *pb = (float *)malloc(n * sizeof(float));
+    int *p = (int *)malloc(n * sizeof(int)), *v = (int *)malloc(n * sizeof(int));
+    copia_lista(n, p, pesos);
+    copia_lista(n, v, valores);
 
-    peso_beneficio(n, pesos, valores, pb);
+    float *pb = (float *)malloc(n * sizeof(float));
+    peso_beneficio(n, p, v, pb);
     float menor_pb = menor_f(n, pb);
 
-    for (j = 0; j < n; j++)
+    for (int j = 0; j < n; j++)
     {
         for (int i = 0; i < n; i++)
         {
-            if (solucao[i] == 0 && pesos[i] <= W && pb[i] == menor_pb)
+            if (solucao[i] == 0 && pb[i] == menor_pb)
             {
-                W -= pesos[i];
-                pb[i] = 10000000;
-                menor_pb = menor_f(n, pb);
-                solucao[i] = 1;
-            }
-            if (solucao[i] == 0 && pesos[i] > W && pb[i] == menor_pb)
-            {
-                pb[i] = 10000000;
+                if (p[i] <= W)
+                {
+                    W -= p[i];
+                    solucao[i] = 1;
+                }
+                pb[i] = 10000000.0;
                 menor_pb = menor_f(n, pb);
             }
         }
     }
-    free(aux);
     free(pb);
 };

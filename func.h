@@ -8,12 +8,12 @@ int *verifica_solucao(int *pesos, int *valores, int n, int *sol);
 
 void sol_imprime(int n, int *s);
 void copia_lista(int n, int *copia, int *original);
+void zera_lista(int n, int *v);
 
 int maximo(int a, int b);
 int maior(int n, int *v);
 int menor(int n, int *v);
 float menor_f(int n, float *v);
-int iguais(int n, int *v1, int *v2);
 void peso_beneficio(int n, int *p, int *v, float *r);
 
 void solucao_aleatoria(int W, int *pesos, int *valores, int n, int *sol);
