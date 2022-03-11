@@ -4,9 +4,9 @@
 
 int main()
 {
-    int n = 5, W = 9;                                   // quantidade de itens e o peso maximo que a mochila pode suportar
-    int p[5] = {1, 3, 5, 6, 2}, v[5] = {3, 7, 1, 9, 3}; // pesos e valores dos itens
-    int *sol = (int *)malloc(n * sizeof(int));          // vetor solucao
+    int n = 5, W = 15;                                    // quantidade de itens e o peso maximo que a mochila pode suportar
+    int p[5] = {12, 1, 4, 1, 2}, v[5] = {4, 2, 10, 1, 2}; // pesos e valores dos itens
+    int *sol = (int *)malloc(n * sizeof(int));            // vetor solucao
     int *pesos = (int *)malloc(n * sizeof(int)), *valores = (int *)malloc(n * sizeof(int));
 
     if (sol == NULL || pesos == NULL || valores == NULL)
@@ -18,15 +18,19 @@ int main()
     preenche_vetor(p, n, pesos);
     preenche_vetor(v, n, valores);
 
-    /*
-    mochila_forca_bruta(W, pesos, valores, qtd_itens, sol); // chama algoritmo do forca bruta
-    */
+    // ler dados do arquivo txt
 
-    // solucoes aleatorias
-    // gera_solucoes(W, pesos, valores, n, sol, 5000);
-
-    // imprime resultados
     imprime_dados(pesos, valores, n);
+
+    printf("Solução Forca Bruta: ");
+    mochila_forca_bruta(W, pesos, valores, n, sol); // chama algoritmo do forca bruta
+    sol_imprime(n, sol);
+    zera_lista(n, sol);
+
+    printf("Solução aleatória: ");
+    gera_solucoes(W, pesos, valores, n, sol, 50000);
+    sol_imprime(n, sol);
+    zera_lista(n, sol);
 
     printf("Maior Beneficio: ");
     mochila_beneficio(W, pesos, valores, n, sol);

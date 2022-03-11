@@ -166,7 +166,7 @@ void gera_solucoes(int W, int *pesos, int *valores, int n, int *solucao, int qtd
         solucao_aleatoria(W, pesos, valores, n, solucao);
         aux = verifica_solucao(pesos, valores, n, solucao);
 
-        if (aux[0] <= 9 && aux[1] > melhor_resultado[1])
+        if (aux[0] <= W && aux[1] > melhor_resultado[1])
         {
             copia_lista(n, melhor_sol, solucao);
             melhor_resultado = aux;
@@ -242,6 +242,9 @@ void mochila_beneficio(int W, int *pesos, int *valores, int n, int *solucao)
                 {
                     W -= p[i];
                     solucao[i] = 1;
+
+                    if (W == 0)
+                        break;
                 }
                 v[i] = -99999;
                 maior_valor = maior(n, v);
@@ -268,6 +271,9 @@ void mochila_menor_peso(int W, int *pesos, int *valores, int n, int *solucao)
                 {
                     W -= p[i];
                     solucao[i] = 1;
+
+                    if (W == 0)
+                        break;
                 }
                 p[i] = 10000000;
                 menor_peso = menor(n, p);
@@ -296,6 +302,9 @@ void mochila_peso_beneficio(int W, int *pesos, int *valores, int n, int *solucao
                 {
                     W -= p[i];
                     solucao[i] = 1;
+
+                    if (W == 0)
+                        break;
                 }
                 pb[i] = 10000000.0;
                 menor_pb = menor_f(n, pb);
