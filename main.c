@@ -27,8 +27,17 @@ int main()
 
     // imprime resultados
     imprime_dados(pesos, valores, n);
-    mochila_menor_peso(W, pesos, valores, n, sol);
+    mochila_peso_beneficio(W, pesos, valores, n, sol);
     sol_imprime(n, sol);
+
+    /*  float *pb = (float *)malloc(n * sizeof(float));
+
+     peso_beneficio(n, pesos, valores, pb);
+
+     for (int i = 0; i < n; i++)
+     {
+         printf("%f ", pb[i]);
+     } */
 
     return 0;
 }

@@ -12,7 +12,9 @@ void copia_lista(int n, int *copia, int *original);
 int maximo(int a, int b);
 int maior(int n, int *v);
 int menor(int n, int *v);
+float menor_f(int n, float *v);
 int iguais(int n, int *v1, int *v2);
+void peso_beneficio(int n, int *p, int *v, float *r);
 
 void solucao_aleatoria(int W, int *pesos, int *valores, int n, int *sol);
 void gera_solucoes(int W, int *pesos, int *valores, int n, int *solucao, int qtd_sol);
@@ -20,4 +22,4 @@ void gera_solucoes(int W, int *pesos, int *valores, int n, int *solucao, int qtd
 int mochila_forca_bruta(int W, int *pesos, int *valores, int n, int *solucao);
 void mochila_beneficio(int W, int *pesos, int *valores, int n, int *solucao);
 void mochila_menor_peso(int W, int *pesos, int *valores, int n, int *solucao);
-void mochila_maior_peso(int W, int *pesos, int *valores, int n, int *solucao);
+void mochila_peso_beneficio(int W, int *pesos, int *valores, int n, int *solucao);
