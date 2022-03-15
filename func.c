@@ -26,6 +26,7 @@ void imprime_dados(int *pesos, int *valores, int n)
 int *verifica_solucao(int *pesos, int *valores, int n, int *sol)
 {
     int *resultado = (int *)malloc(2 * sizeof(int));
+    zera_lista(n, resultado);
     for (int i = 0; i < n; i++)
     {
         if (sol[i] == 1)
@@ -160,6 +161,8 @@ void gera_solucoes(int W, int *pesos, int *valores, int n, int *solucao, int qtd
 {
     int *melhor_sol = (int *)malloc(n * sizeof(int)), *aux;
     int *melhor_resultado = verifica_solucao(pesos, valores, n, solucao);
+
+    zera_lista(n, melhor_sol);
 
     for (int i = 0; i < qtd_sol; i++)
     {

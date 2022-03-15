@@ -13,48 +13,40 @@ int main()
     Arquivo data;
     abrir_arquivo("ex1.txt", &data);
     imprimir(data);
+
     int *sol = (int *)malloc(data.n * sizeof(int)); // vetor solucao
-    int *pesos = (int *)malloc(data.n * sizeof(int)), *valores = (int *)malloc(data.n * sizeof(int));
-    if (sol == NULL || pesos == NULL || valores == NULL)
+    if (sol == NULL)
     { // verifica se a memoria esta sendo alocada corretamente
         printf("Memória não alocada!");
         exit(1);
     }
-    /*
-        preenche_vetor(p, n, pesos);
-        preenche_vetor(v, n, valores); */
 
-    // ler dados do arquivo txt
-
-    /* imprime_dados(pesos, valores, data.n);
-
+    zera_lista(data.n, sol);
     printf("Solução Forca Bruta: ");
-    mochila_forca_bruta(W, pesos, valores, data.n, sol); // chama algoritmo do forca bruta
+    mochila_forca_bruta(data.W, data.pesos, data.beneficios, data.n, sol); // chama algoritmo do forca bruta
     sol_imprime(data.n, sol);
-    zera_lista(data.n, sol);
 
+    zera_lista(data.n, sol);
     printf("Solução aleatória: ");
-    gera_solucoes(W, pesos, valores, data.n, sol, 50000);
+    gera_solucoes(data.W, data.pesos, data.beneficios, data.n, sol, 50000);
     sol_imprime(data.n, sol);
-    zera_lista(data.n, sol);
 
+    zera_lista(data.n, sol);
     printf("Maior Beneficio: ");
-    mochila_beneficio(W, pesos, valores, data.n, sol);
+    mochila_beneficio(data.W, data.pesos, data.beneficios, data.n, sol);
     sol_imprime(data.n, sol);
-    zera_lista(data.n, sol);
 
+    zera_lista(data.n, sol);
     printf("Menor peso: ");
-    mochila_menor_peso(W, pesos, valores, data.n, sol);
+    mochila_menor_peso(data.W, data.pesos, data.beneficios, data.n, sol);
     sol_imprime(data.n, sol);
-    zera_lista(data.n, sol);
 
+    zera_lista(data.n, sol);
     printf("Peso/Beneficio: ");
-    mochila_peso_beneficio(W, pesos, valores, data.n, sol);
-    sol_imprime(data.n, sol); */
+    mochila_peso_beneficio(data.W, data.pesos, data.beneficios, data.n, sol);
+    sol_imprime(data.n, sol);
 
     free(sol);
-    free(pesos);
-    free(valores);
     libera_memoria(&data);
 
     return 0;
