@@ -313,3 +313,83 @@ void mochila_peso_beneficio(int W, int *pesos, int *valores, int n, int *solucao
     }
     free(pb);
 };
+
+/*Função básica de alocação de memória, recebe como parâmetro uma dado contido em uma struct, representado pela variável data.
+Esse vetor é alocado dinamicamente do tamanho do parâmetro n, e retornado por endereço de memória.*/
+void aloca_memoria(Arquivo *data)
+{
+    data->pesos = (int *)malloc(data->n * sizeof(int));
+    data->beneficios = (int *)malloc(data->n * sizeof(int));
+    if (data->pesos == NULL || data->beneficios == NULL)
+    {
+        printf("Memória não alocada com sucesso!\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void libera_memoria(Arquivo *data)
+{
+    free(data->pesos);
+    free(data->beneficios);
+}
+
+/*Função básica que recebe como parâmetro uma dado contido em uma struc,
+representado pela variável data. Esse dado é impresso na tela.
+Repare que a struct contem um vetor interno alocado dinamicamente.*/
+void imprimir(Arquivo data)
+{
+    printf("W = %d\nn = %d\nPesos: ", data.W, data.n);
+    for (int i = 0; i < data.n; i++)
+        printf("%d ", data.pesos[i]);
+    printf("\nBenefícios: ");
+    for (int i = 0; i < data.n; i++)
+        printf("%d ", data.beneficios[i]);
+    printf("\n");
+}
+
+/*Função que recebe por parâmetro o endereço do arquivo  a ser aberto, contido na variável ”path”
+Após o arquivo aberto, os dados são lidos, e salvos e retornado no endereço de memória da variável “ *data”*/
+void abrir_arquivo(char *path, Arquivo *data)
+{
+    // criando a variável ponteiro para o arquivo
+    FILE *pont_arq;
+    int valor; // variável para leitura de cada valor
+
+    // abrindo o arquivo para leitura - caminho do arquivo em path e modo read
+    pont_arq = fopen(path, "r");
+
+    // verificando se arquivo foi aberto com sucesso
+    if (pont_arq == NULL)
+    {
+        printf("ERRO! O arquivo não foi aberto!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // A função fscanf() funciona como a função scanf(). A diferença é que fscanf() lê de um arquivo e não do teclado do computador.
+    fscanf(pont_arq, "%d", &valor);
+    // o primero valor lido é o valor de "n", logo é o tamanho do vetor a ser alocado
+    data->W = valor;
+
+    fscanf(pont_arq, "%d", &valor);
+    data->n = valor;
+
+    aloca_memoria(data);
+
+    // se existem n valores, este valores vão ser lidos sequencialmente
+    for (int i = 0; i < data->n; i++)
+    {
+        fscanf(pont_arq, "%d", &valor); // lê os valores sequentemente da linha, um por um
+        data->pesos[i] = valor;         // atrivui cada valor lido a posição do vetor que é retornado por endereço de memoria
+    }
+
+    for (int i = 0; i < data->n; i++)
+    {
+        fscanf(pont_arq, "%d", &valor); // lê os valores sequentemente da linha, um por um
+        data->beneficios[i] = valor;    // atrivui cada valor lido a posição do vetor que é retornado por endereço de memoria
+    }
+
+    // fechando arquivo - Nunca se esqueça!
+    fclose(pont_arq);
+
+    // FIM :)
+}
