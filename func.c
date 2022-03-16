@@ -1,44 +1,27 @@
 #include "func.h"
 
-void preenche_vetor(int v[], int n, int *p)
+void verifica_alocacao(int *alocc)
 {
-    for (int i = 0; i < n; i++)
+    if (alocc == NULL)
     {
-        p[i] = v[i];
+        printf("Memória não alocada com sucesso!\n");
+        exit(EXIT_FAILURE);
     }
 }
 
-void imprime_dados(int *pesos, int *valores, int n)
+int verifica_solucao(int *vetor, int n, int *sol)
 {
-    printf("Pesos: ");
-    for (int i = 0; i < n; i++)
-    {
-        printf("%d ", pesos[i]);
-    }
-    printf("\nValores: ");
-    for (int i = 0; i < n; i++)
-    {
-        printf("%d ", valores[i]);
-    }
-    printf("\n");
-}
-
-int *verifica_solucao(int *pesos, int *valores, int n, int *sol)
-{
-    int *resultado = (int *)malloc(2 * sizeof(int));
-    zera_lista(n, resultado);
+    int resultado = 0;
     for (int i = 0; i < n; i++)
     {
         if (sol[i] == 1)
         {
-            resultado[0] += pesos[i];
-            resultado[1] += valores[i];
+            resultado += vetor[i];
         }
     }
     return resultado;
 }
 
-// funcoes uteis
 void sol_imprime(int n, int *s)
 {
     printf("[ ");
@@ -72,114 +55,87 @@ void zera_lista(int n, int *v)
     }
 }
 
-int maximo(int a, int b) { return (a > b) ? a : b; }
+int calcula_permutacao(int base, int exp)
+{
+    int permutacao = base;
+    for (int i = 0; i < exp; i++)
+    {
+        permutacao = permutacao * base;
+    }
+
+    return permutacao;
+}
 
 // funcoes mochila 0-1
 int mochila_forca_bruta(int W, int *pesos, int *valores, int n, int *solucao)
 {
-    int i, w;
-    int K[n + 1][W + 1]; // cria tabela
+    int *melhor_sol = (int *)malloc(n * sizeof(int));
+    verifica_alocacao(melhor_sol);
+    int melhor_beneficio = verifica_solucao(valores, n, solucao),
+        qtd_permutacao = calcula_permutacao(2, n);
 
-    // preenche tabela
-    for (i = 0; i <= n; i++)
-    { // percorre linhas
-        for (w = 0; w <= W; w++)
-        { // percorre pesos
-            if (i == 0 || w == 0)
-            { // primeira posicao d tabela recebe zero
-                K[i][w] = 0;
-            }
-            else if (pesos[i - 1] <= w)
-            {                                                          // se posicao i-1 for menor ou igual ao peso
-                int usa = valores[i - 1] + K[i - 1][w - pesos[i - 1]]; // somao valor i-1 com a posicao K[i - 1][w - pesos[i - 1]] da tabela
-                int nao_usa = K[i - 1][w];                             // pega somente a posicao anterior da tabela
-                K[i][w] = maximo(usa, nao_usa);                        // adiciona o maior valor na tabela
-            }
-            else
-            { // se for maior que o peso, so repete o valor da linha de cima
-                K[i][w] = K[i - 1][w];
-            }
-        }
-    }
+    copia_lista(n, melhor_sol, solucao);
 
-    // armazena resultados da mochila
-    // pega o ultimo elemento da tabela que é o melhor caso
-    int res = K[n][W];
-
-    w = W; // variavel auxiliar recebe o peso maximo
-    for (i = n; i > 0 && res > 0; i--)
-    { // percorre ao contrario, de n ate 0, verificando sempre se o res tambem zerou
-        if (res == K[i - 1][w])
-        { // se res é igual a k[i-1][w], nao fazemos nada
-            continue;
-        }
-        else
+    for (int i = 0; i < qtd_permutacao; i++)
+    {
+        for (int j = 0; j < n; j++) // for que gera solucao
         {
-            // tem item na posicao i-1
-            solucao[i - 1] = 1;
-
-            // remove o valor e peso na posicao i-1
-            res = res - valores[i - 1];
-            w = w - pesos[i - 1];
+            int aux = i % calcula_permutacao(2, j);
+            if (aux == 0)
+            {
+                if (solucao[j] == 0)
+                {
+                    solucao[j] = 1;
+                }
+                else
+                {
+                    solucao[j] = 0;
+                }
+            }
         }
-    }
-}
+        int peso_aux = verifica_solucao(pesos, n, solucao);
+        int beneficio_aux = verifica_solucao(valores, n, solucao);
 
-void solucao_aleatoria(int W, int *pesos, int *valores, int n, int *sol)
-{
-    // sorteia quantas posicoes vao ser preenchidos
-    srand(time(NULL));
-    int n_pos = (rand() % n); // numeros de 0 a n-1
-    if (n_pos == 0)
-    {
-        n_pos += 1;
-    }
-
-    // sorteia em quais posicoes ira ser escolhido
-    srand(time(NULL));
-    int *aux = (int *)malloc(n_pos * sizeof(int));
-    for (int i = 0; i < n_pos; i++)
-    {
-        aux[i] = rand() % n;
-        if (aux[i] == aux[i - 1] && i != 0)
+        // peso - beneficio
+        if (peso_aux <= W && beneficio_aux > melhor_beneficio)
         {
-            aux[i] = rand() % n;
-        }
-    }
-
-    // preencha as posicoes sorteadas
-    for (int i = 0; i < n_pos; i++)
-    {
-        int pos = aux[i];
-        sol[pos] = 1;
-    }
-
-    free(aux);
-}
-
-void gera_solucoes(int W, int *pesos, int *valores, int n, int *solucao, int qtd_sol)
-{
-    int *melhor_sol = (int *)malloc(n * sizeof(int)), *aux;
-    int *melhor_resultado = verifica_solucao(pesos, valores, n, solucao);
-
-    zera_lista(n, melhor_sol);
-
-    for (int i = 0; i < qtd_sol; i++)
-    {
-        solucao_aleatoria(W, pesos, valores, n, solucao);
-        aux = verifica_solucao(pesos, valores, n, solucao);
-
-        if (aux[0] <= W && aux[1] > melhor_resultado[1])
-        {
+            melhor_beneficio = beneficio_aux;
             copia_lista(n, melhor_sol, solucao);
-            melhor_resultado = aux;
         }
     }
 
     copia_lista(n, solucao, melhor_sol);
-
     free(melhor_sol);
-    free(melhor_resultado);
+}
+
+void gera_solucoes(int W, int *pesos, int *valores, int n, int *solucao, int qtd_sol)
+{
+    int *melhor_sol = (int *)malloc(n * sizeof(int)),
+        melhor_beneficio = 0;
+    verifica_alocacao(melhor_sol);
+
+    srand(time(NULL));
+    for (int i = 0; i < qtd_sol; i++)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            int pos = rand() % n;
+            solucao[pos] = 1;
+        }
+
+        int peso_aux = verifica_solucao(pesos, n, solucao);
+        int beneficio_aux = verifica_solucao(valores, n, solucao);
+
+        if (peso_aux <= W && beneficio_aux > melhor_beneficio)
+        {
+            copia_lista(n, melhor_sol, solucao);
+            melhor_beneficio = beneficio_aux;
+        }
+        zera_lista(n, solucao);
+    }
+
+    copia_lista(n, solucao, melhor_sol);
+    free(melhor_sol);
 }
 
 int maior(int n, int *v)
@@ -206,6 +162,18 @@ int menor(int n, int *v)
     return m;
 }
 
+float maior_f(int n, float *v)
+{
+    float m = v[0];
+
+    for (int i = 1; i < n; i++)
+    {
+        if (v[i] > m)
+            m = v[i];
+    }
+    return m;
+}
+
 float menor_f(int n, float *v)
 {
     float m = v[0];
@@ -218,18 +186,14 @@ float menor_f(int n, float *v)
     return m;
 }
 
-void peso_beneficio(int n, int *p, int *v, float *r)
-{
-    for (int i = 0; i < n; i++)
-    {
-        float temp = (float)p[i] / (float)v[i];
-        r[i] = temp;
-    }
-}
-
 void mochila_beneficio(int W, int *pesos, int *valores, int n, int *solucao)
 {
-    int *p = (int *)malloc(n * sizeof(int)), *v = (int *)malloc(n * sizeof(int));
+    int *p = (int *)malloc(n * sizeof(int)),
+        *v = (int *)malloc(n * sizeof(int));
+
+    verifica_alocacao(p);
+    verifica_alocacao(v);
+
     copia_lista(n, p, pesos);
     copia_lista(n, v, valores);
 
@@ -249,16 +213,24 @@ void mochila_beneficio(int W, int *pesos, int *valores, int n, int *solucao)
                     if (W == 0)
                         break;
                 }
-                v[i] = -99999;
+                v[i] = menor(n, v) - 1;
                 maior_valor = maior(n, v);
             }
         }
     }
+
+    free(p);
+    free(v);
 }
 
 void mochila_menor_peso(int W, int *pesos, int *valores, int n, int *solucao)
 {
-    int *p = (int *)malloc(n * sizeof(int)), *v = (int *)malloc(n * sizeof(int));
+    int *p = (int *)malloc(n * sizeof(int)),
+        *v = (int *)malloc(n * sizeof(int));
+
+    verifica_alocacao(p);
+    verifica_alocacao(v);
+
     copia_lista(n, p, pesos);
     copia_lista(n, v, valores);
 
@@ -278,21 +250,38 @@ void mochila_menor_peso(int W, int *pesos, int *valores, int n, int *solucao)
                     if (W == 0)
                         break;
                 }
-                p[i] = 10000000;
+                p[i] = maior(n, p) + 1;
                 menor_peso = menor(n, p);
             }
         }
     }
+    free(p);
+    free(v);
 }
 
 void mochila_peso_beneficio(int W, int *pesos, int *valores, int n, int *solucao)
 {
-    int *p = (int *)malloc(n * sizeof(int)), *v = (int *)malloc(n * sizeof(int));
+    int *p = (int *)malloc(n * sizeof(int)),
+        *v = (int *)malloc(n * sizeof(int));
+    float *pb = (float *)malloc(n * sizeof(float));
+
+    verifica_alocacao(p);
+    verifica_alocacao(v);
+    if (pb == NULL)
+    {
+        printf("Memória não alocada com sucesso!\n");
+        exit(EXIT_FAILURE);
+    }
+
     copia_lista(n, p, pesos);
     copia_lista(n, v, valores);
 
-    float *pb = (float *)malloc(n * sizeof(float));
-    peso_beneficio(n, p, v, pb);
+    for (int i = 0; i < n; i++)
+    {
+        float temp = (float)p[i] / (float)v[i];
+        pb[i] = temp;
+    }
+
     float menor_pb = menor_f(n, pb);
 
     for (int j = 0; j < n; j++)
@@ -309,11 +298,14 @@ void mochila_peso_beneficio(int W, int *pesos, int *valores, int n, int *solucao
                     if (W == 0)
                         break;
                 }
-                pb[i] = 10000000.0;
+                pb[i] = maior_f(n, pb) + 1;
                 menor_pb = menor_f(n, pb);
             }
         }
     }
+
+    free(p);
+    free(v);
     free(pb);
 };
 
@@ -323,11 +315,8 @@ void aloca_memoria(Arquivo *data)
 {
     data->pesos = (int *)malloc(data->n * sizeof(int));
     data->beneficios = (int *)malloc(data->n * sizeof(int));
-    if (data->pesos == NULL || data->beneficios == NULL)
-    {
-        printf("Memória não alocada com sucesso!\n");
-        exit(EXIT_FAILURE);
-    }
+    verifica_alocacao(data->pesos);
+    verifica_alocacao(data->beneficios);
 }
 
 void libera_memoria(Arquivo *data)
@@ -339,7 +328,7 @@ void libera_memoria(Arquivo *data)
 /*Função básica que recebe como parâmetro uma dado contido em uma struc,
 representado pela variável data. Esse dado é impresso na tela.
 Repare que a struct contem um vetor interno alocado dinamicamente.*/
-void imprimir(Arquivo data)
+void imprimir_entrada(Arquivo data)
 {
     printf("W = %d\nn = %d\nPesos: ", data.W, data.n);
     for (int i = 0; i < data.n; i++)
@@ -370,25 +359,28 @@ void abrir_arquivo(char *path, Arquivo *data)
 
     // A função fscanf() funciona como a função scanf(). A diferença é que fscanf() lê de um arquivo e não do teclado do computador.
     fscanf(pont_arq, "%d", &valor);
-    // o primero valor lido é o valor de "n", logo é o tamanho do vetor a ser alocado
+    // o primero valor lido é o valor de "W", que e a capacidade da mochila
     data->W = valor;
 
+    // o segundo valor lido é o valor de "n", logo é o tamanho do vetor a ser alocado
     fscanf(pont_arq, "%d", &valor);
     data->n = valor;
 
-    aloca_memoria(data);
+    aloca_memoria(data); // aloca a memoria dos vetores
 
     // se existem n valores, este valores vão ser lidos sequencialmente
     for (int i = 0; i < data->n; i++)
     {
         fscanf(pont_arq, "%d", &valor); // lê os valores sequentemente da linha, um por um
-        data->pesos[i] = valor;         // atrivui cada valor lido a posição do vetor que é retornado por endereço de memoria
+        // o valor sendo lido nessa linha é o peso
+        data->pesos[i] = valor; // atrivui cada valor lido a posição do vetor que é retornado por endereço de memoria
     }
 
     for (int i = 0; i < data->n; i++)
     {
         fscanf(pont_arq, "%d", &valor); // lê os valores sequentemente da linha, um por um
-        data->beneficios[i] = valor;    // atrivui cada valor lido a posição do vetor que é retornado por endereço de memoria
+        // o valor sendo lido nessa linha é o beneficio
+        data->beneficios[i] = valor; // atrivui cada valor lido a posição do vetor que é retornado por endereço de memoria
     }
 
     // fechando arquivo - Nunca se esqueça!
