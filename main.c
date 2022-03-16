@@ -7,7 +7,7 @@ int main()
     Arquivo data;
     clock_t tInicio;
     int *resultado, peso, beneficio;
-    abrir_arquivo("ex2.txt", &data);
+    abrir_arquivo("instancia4.txt", &data);
 
     int *sol = (int *)malloc(data.n * sizeof(int)); // vetor solucao
     verifica_alocacao(sol);
