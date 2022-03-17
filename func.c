@@ -27,17 +27,10 @@ void verifica_alocacao(int *alocc)
 // imprime solucao
 void sol_imprime(int n, int *s)
 {
-    printf("[ ");
+    printf("\nVetor Solucao: [ ");
     for (int i = 0; i < n; i++)
     {
-        if (i == (n - 1))
-        {
-            printf("%d ", s[i]);
-        }
-        else
-        {
-            printf("%d, ", s[i]);
-        }
+        printf("%d ", s[i]);
     }
     printf("]\n");
 }
@@ -422,12 +415,18 @@ Repare que a struct contem um vetor interno alocado dinamicamente.
 */
 void imprimir_entrada(Arquivo data)
 {
-    printf("W = %d\nn = %d\nPesos: ", data.W, data.n);
+    printf("Capacidade da Mochila\t%d\n", data.W);
+    printf("Itens\t\t");
     for (int i = 0; i < data.n; i++)
-        printf("%d ", data.pesos[i]);
-    printf("\nBenefícios: ");
+        printf("%.2d ", i + 1);
+
+    printf("\nPesos\t\t");
     for (int i = 0; i < data.n; i++)
-        printf("%d ", data.beneficios[i]);
+        printf("%.2d ", data.pesos[i]);
+
+    printf("\nBenefícios\t");
+    for (int i = 0; i < data.n; i++)
+        printf("%.2d ", data.beneficios[i]);
     printf("\n");
 }
 

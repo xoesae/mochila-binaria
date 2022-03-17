@@ -7,7 +7,7 @@ int main()
     Arquivo data;        // arquivo lido
     clock_t tInicio;     // marcacao de tempo
     int peso, beneficio; // variaveis auxiliares
-    abrir_arquivo("instancia1.txt", &data);
+    abrir_arquivo("instancia4.txt", &data);
 
     int *sol = (int *)malloc(data.n * sizeof(int)); // aloca vetor solucao
     verifica_alocacao(sol);                         // verifica se foi alocada
@@ -24,7 +24,7 @@ int main()
         - imprime o tempo de execucao em ms
     */
 
-    printf("\nSolução Forca Bruta: ");
+    printf("\nForca Bruta");
     tInicio = clock();
     mochila_forca_bruta(data.W, data.pesos, data.beneficios, data.n, sol);
     sol_imprime(data.n, sol);
@@ -32,7 +32,7 @@ int main()
     printf("Peso: %d | Beneficio: %d\n", peso, beneficio);
     printf("Tempo de execução: %.4fms\n", ((double)(clock() - tInicio) / (CLOCKS_PER_SEC / 1000)));
 
-    printf("\nSolução aleatória: ");
+    printf("\nAleatório");
     tInicio = clock();
     mochila_aleatoria(data.W, data.pesos, data.beneficios, data.n, sol, 50000);
     sol_imprime(data.n, sol);
@@ -40,7 +40,7 @@ int main()
     printf("Peso: %d | Beneficio: %d\n", peso, beneficio);
     printf("Tempo de execução: %.4fms\n", ((double)(clock() - tInicio) / (CLOCKS_PER_SEC / 1000)));
 
-    printf("\nMaior Beneficio: ");
+    printf("\nMaior Beneficio");
     tInicio = clock();
     mochila_beneficio(data.W, data.pesos, data.beneficios, data.n, sol);
     sol_imprime(data.n, sol);
@@ -48,7 +48,7 @@ int main()
     printf("Peso: %d | Beneficio: %d\n", peso, beneficio);
     printf("Tempo de execução: %.4fms\n", ((double)(clock() - tInicio) / (CLOCKS_PER_SEC / 1000)));
 
-    printf("\nMenor peso: ");
+    printf("\nMenor peso");
     tInicio = clock();
     mochila_menor_peso(data.W, data.pesos, data.beneficios, data.n, sol);
     sol_imprime(data.n, sol);
@@ -56,7 +56,7 @@ int main()
     printf("Peso: %d | Beneficio: %d\n", peso, beneficio);
     printf("Tempo de execução: %.4fms\n", ((double)(clock() - tInicio) / (CLOCKS_PER_SEC / 1000)));
 
-    printf("\nPeso/Beneficio: ");
+    printf("\nPeso/Beneficio");
     tInicio = clock();
     mochila_peso_beneficio(data.W, data.pesos, data.beneficios, data.n, sol);
     sol_imprime(data.n, sol);
