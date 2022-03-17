@@ -149,9 +149,14 @@ void mochila_forca_bruta(int W, int *pesos, int *valores, int n, int *solucao)
     {
         for (int j = 0; j < n; j++) // for que gera solucao
         {
+            // pega o resto da divisao entre i que
+            // varia de 0 a qtd_permutacao e 2^j
+            // serve calcular quanto cada posicao vai variar
             int aux = i % potencia(2, j);
             if (aux == 0)
             {
+                // varia a posicao j entre 0 e 1,  na primeira iteracao
+                // se a posicao j for 0, na proxima tem que ser 1
                 if (solucao[j] == 0)
                 {
                     solucao[j] = 1;
@@ -359,7 +364,7 @@ void mochila_peso_beneficio(int W, int *pesos, int *valores, int n, int *solucao
     // se o vetor tem  n posicoes, temos q rodar esse codigo n vezes
     for (int j = 0; j < n; j++)
     {
-        for (int i = 0; i < n; i++) // percorre posicoes do array
+        for (int i = 0; i < n; i++) // percorre posicoes do vetor
         {
             // se a posicao i da solucao ainda nao foi preeenchido
             // e ele é o menor peso/beneficio
