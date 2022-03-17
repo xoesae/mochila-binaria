@@ -190,8 +190,7 @@ void mochila_aleatoria(int W, int *pesos, int *valores, int n, int *solucao, int
     {
         for (int i = 0; i < n; i++) // gera uma solucao
         {
-            int pos = rand() % n; // sorteia um numero entre 0 e n-1
-            solucao[pos] = 1;     // preenche essa posicao sorteada
+            solucao[i] = rand() % 2; // preenche a posicao i com 0 ou 1
         }
 
         int peso_aux = verifica_solucao(pesos, n, solucao);        // calcula peso da solucao

@@ -7,7 +7,7 @@ int main()
     Arquivo data;        // arquivo lido
     clock_t tInicio;     // marcacao de tempo
     int peso, beneficio; // variaveis auxiliares
-    abrir_arquivo("instancia4.txt", &data);
+    abrir_arquivo("instancia1.txt", &data);
 
     int *sol = (int *)malloc(data.n * sizeof(int)); // aloca vetor solucao
     verifica_alocacao(sol);                         // verifica se foi alocada
